@@ -1,0 +1,44 @@
+# Cria o banco e a tabela e insere chamados fictícios (só se estiver vazia)
+import mysql.connector
+
+import config
+from modelos import chamado_modelo
+from modelos.conexao import consultar, executar
+
+# Dados fictícios com CEPs públicos
+EXEMPLOS = [
+    ("buraco", "Buraco grande na faixa da direita, carros desviando para a contramão.",
+     "Em frente ao ponto de ônibus", "01310100", "Avenida Paulista", "Bela Vista", "São Paulo", "SP", "alta"),
+    ("iluminacao", "Três postes apagados seguidos, rua muito escura à noite.",
+     "Perto da praça", "04538133", "Avenida Brigadeiro Faria Lima", "Itaim Bibi", "São Paulo", "SP", "media"),
+    ("lixo", "Lixo acumulado na calçada há mais de uma semana.",
+     None, "20040020", "Avenida Rio Branco", "Centro", "Rio de Janeiro", "RJ", "media"),
+    ("calcada", "Calçada quebrada, cadeirante não consegue passar.",
+     "Esquina com a padaria", "30130010", "Praça Sete de Setembro", "Centro", "Belo Horizonte", "MG", "baixa"),
+]
+
+faltando = config.validar_configuracao()
+if faltando:
+    exit(f"[ERRO] Faltam no .env: {', '.join(faltando)}")
+
+# Nome de banco não aceita %s, então é validado antes
+nome_banco = config.MYSQL["database"]
+if not nome_banco.replace("_", "").isalnum():
+    exit("[ERRO] DB_NAME inválido (use letras, números e _).")
+
+dados_conexao = dict(config.MYSQL)
+del dados_conexao["database"]  # o banco pode ainda não existir
+conexao = mysql.connector.connect(**dados_conexao)
+conexao.cursor().execute(f"CREATE DATABASE IF NOT EXISTS {nome_banco}")
+conexao.close()
+
+chamado_modelo.criar_tabela()
+print(f"[OK] Banco '{nome_banco}' e tabela 'chamados' prontos.")
+
+if consultar("SELECT COUNT(*) AS total FROM chamados")[0]["total"] == 0:
+    for exemplo in EXEMPLOS:
+        executar(
+            "INSERT INTO chamados (tipo, descricao, referencia, cep, logradouro, bairro, cidade, uf, "
+            "prioridade, status, criado_em) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'aberto', NOW())",
+            exemplo)
+    print(f"[OK] {len(EXEMPLOS)} chamados fictícios inseridos.")

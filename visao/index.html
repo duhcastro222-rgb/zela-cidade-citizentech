@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zela Cidade</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <header>
+    <h1>Zela Cidade</h1>
+    <p>Chamados anônimos de zeladoria urbana.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Abrir chamado</h2>
+      <form id="form-chamado">
+        <label>Tipo
+          <select name="tipo">
+            <option value="buraco">Buraco na rua</option>
+            <option value="iluminacao">Iluminação apagada</option>
+            <option value="lixo">Lixo / entulho</option>
+            <option value="calcada">Calçada quebrada</option>
+            <option value="arvore">Árvore caída</option>
+          </select>
+        </label>
+        <label>Prioridade
+          <select name="prioridade">
+            <option value="baixa">Baixa</option>
+            <option value="media" selected>Média</option>
+            <option value="alta">Alta (risco a pessoas)</option>
+          </select>
+        </label>
+        <label>CEP
+          <input name="cep" maxlength="9" placeholder="01310-100" required />
+        </label>
+        <label>Ponto de referência (opcional)
+          <input name="referencia" maxlength="120" />
+        </label>
+        <label class="largo">Descrição
+          <textarea name="descricao" rows="3" minlength="10" maxlength="300" required></textarea>
+        </label>
+        <p class="largo aviso">Não informe nome, telefone ou documentos.</p>
+        <button type="submit">Enviar</button>
+      </form>
+      <p id="msg-form" class="mensagem"></p>
+    </section>
+
+    <section>
+      <h2>Chamados</h2>
+      <select id="filtro-status">
+        <option value="">Todos os status</option>
+        <option value="aberto">Aberto</option>
+        <option value="em_andamento">Em andamento</option>
+        <option value="resolvido">Resolvido</option>
+      </select>
+      <p id="msg-lista" class="mensagem"></p>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Tipo</th><th>Local</th><th>Descrição</th><th>Prioridade</th><th>Status</th><th>Aberto em</th><th></th></tr>
+        </thead>
+        <tbody id="corpo-chamados"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
