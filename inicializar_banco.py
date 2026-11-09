@@ -6,15 +6,20 @@ from modelos import chamado_modelo
 from modelos.conexao import consultar, executar
 
 # Dados fictícios com CEPs públicos
+# (tipo, descrição, referência, cep, logradouro, bairro, cidade, uf, latitude, longitude, prioridade)
 EXEMPLOS = [
     ("buraco", "Buraco grande na faixa da direita, carros desviando para a contramão.",
-     "Em frente ao ponto de ônibus", "01310100", "Avenida Paulista", "Bela Vista", "São Paulo", "SP", "alta"),
+     "Em frente ao ponto de ônibus", "01310100", "Avenida Paulista", "Bela Vista", "São Paulo", "SP",
+     -23.5614, -46.6559, "alta"),
     ("iluminacao", "Três postes apagados seguidos, rua muito escura à noite.",
-     "Perto da praça", "04538133", "Avenida Brigadeiro Faria Lima", "Itaim Bibi", "São Paulo", "SP", "media"),
+     "Perto da praça", "04538133", "Avenida Brigadeiro Faria Lima", "Itaim Bibi", "São Paulo", "SP",
+     -23.5868, -46.6823, "media"),
     ("lixo", "Lixo acumulado na calçada há mais de uma semana.",
-     None, "20040020", "Avenida Rio Branco", "Centro", "Rio de Janeiro", "RJ", "media"),
+     None, "20040020", "Avenida Rio Branco", "Centro", "Rio de Janeiro", "RJ",
+     -22.9035, -43.1772, "media"),
     ("calcada", "Calçada quebrada, cadeirante não consegue passar.",
-     "Esquina com a padaria", "30130010", "Praça Sete de Setembro", "Centro", "Belo Horizonte", "MG", "baixa"),
+     "Esquina com a padaria", "30130010", "Praça Sete de Setembro", "Centro", "Belo Horizonte", "MG",
+     -19.9191, -43.9386, "baixa"),
 ]
 
 faltando = config.validar_configuracao()
@@ -38,7 +43,8 @@ print(f"[OK] Banco '{nome_banco}' e tabela 'chamados' prontos.")
 if consultar("SELECT COUNT(*) AS total FROM chamados")[0]["total"] == 0:
     for exemplo in EXEMPLOS:
         executar(
-            "INSERT INTO chamados (tipo, descricao, referencia, cep, logradouro, bairro, cidade, uf, "
-            "prioridade, status, criado_em) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'aberto', NOW())",
-            exemplo)
+            "INSERT INTO chamados (protocolo, tipo, descricao, referencia, cep, logradouro, bairro, "
+            "cidade, uf, latitude, longitude, prioridade, status, criado_em) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'aberto', NOW())",
+            (chamado_modelo.gerar_protocolo(),) + exemplo)
     print(f"[OK] {len(EXEMPLOS)} chamados fictícios inseridos.")

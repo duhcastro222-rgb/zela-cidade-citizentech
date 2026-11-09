@@ -37,6 +37,18 @@ def detalhar(id_chamado):
     return jsonify(chamado_modelo.buscar(id_chamado))
 
 
+@rotas.get("/api/chamados/protocolo/<protocolo>")
+def acompanhar(protocolo):
+    # Tela do cidadão: 200 | 400 formato | 404
+    return jsonify(chamado_modelo.buscar_por_protocolo(protocolo))
+
+
+@rotas.get("/api/cep/<cep>")
+def consultar_cep(cep):
+    # Formulário mostra o endereço e centraliza o mapa: 200 | 400 | 404 | 503
+    return jsonify(cep_modelo.buscar_endereco(cep))
+
+
 @rotas.post("/api/chamados")
 def criar():
     # 201 | 400 inválido | 404 CEP inexistente | 429 spam | 503 ViaCEP fora
@@ -47,16 +59,17 @@ def criar():
     chamado = chamado_modelo.validar_novo(dados)
     endereco = cep_modelo.buscar_endereco(dados.get("cep"))
     novo = chamado_modelo.criar(chamado, endereco)
-    registrar("CRIAR CHAMADO", f"sucesso id={novo['id']}")
+    registrar("CRIAR CHAMADO", f"sucesso {novo['protocolo']}")
 
     # Prioridade alta: avisa a central via socket
     novo["alerta_central"] = None
     if novo["prioridade"] == "alta":
-        mensagem = f"Chamado {novo['id']} | {novo['tipo']} | {novo['bairro']} - {novo['cidade']}/{novo['uf']}"
+        mensagem = f"{novo['protocolo']} | {novo['tipo']} | {novo['bairro']} - {novo['cidade']}/{novo['uf']}"
         novo["alerta_central"] = central_socket.enviar_alerta(mensagem)
         registrar("ALERTA CENTRAL", "entregue" if novo["alerta_central"] else "central offline")
 
-    return jsonify(novo), 201
+    # 201 + endereço do recurso criado (boa prática REST)
+    return jsonify(novo), 201, {"Location": f"/api/chamados/{novo['id']}"}
 
 
 @rotas.put("/api/chamados/<int:id_chamado>")

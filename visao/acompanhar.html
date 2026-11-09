@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zela Cidade | Acompanhar chamado</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <header class="topo">
+    <div class="topo__marca">
+      <strong>Zela Cidade</strong>
+      <span>Chamados anônimos de zeladoria urbana</span>
+    </div>
+    <nav>
+      <a href="index.html">Abrir chamado</a>
+      <a href="acompanhar.html" class="ativo">Acompanhar</a>
+      <a href="gestao.html">Gestão</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="cartao">
+      <h1>Acompanhar chamado</h1>
+      <form id="form-busca" class="busca">
+        <input id="campo-protocolo" placeholder="ZC-XXXXXXXX" maxlength="11" required />
+        <button type="submit">Consultar</button>
+      </form>
+      <p id="msg-busca" class="mensagem"></p>
+    </section>
+
+    <section id="resultado" class="cartao" hidden>
+      <div class="cabecalho-chamado">
+        <div>
+          <span class="suave">Protocolo</span>
+          <h2 id="r-protocolo"></h2>
+        </div>
+        <div id="r-prioridade"></div>
+      </div>
+
+      <!-- Linha do tempo: aberto -> em andamento -> resolvido -->
+      <ol id="linha-tempo" class="linha-tempo">
+        <li data-status="aberto">Aberto</li>
+        <li data-status="em_andamento">Em andamento</li>
+        <li data-status="resolvido">Resolvido</li>
+      </ol>
+
+      <div class="detalhes">
+        <dl>
+          <dt>Tipo</dt><dd id="r-tipo"></dd>
+          <dt>Endereço</dt><dd id="r-endereco"></dd>
+          <dt>Descrição</dt><dd id="r-descricao"></dd>
+          <dt>Aberto em</dt><dd id="r-data"></dd>
+        </dl>
+        <div>
+          <div id="mapa" class="mapa mapa--baixo"></div>
+          <small id="r-sem-ponto" class="suave" hidden>Local exato não marcado no mapa.</small>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="comum.js"></script>
+  <script src="acompanhar.js"></script>
+</body>
+</html>
