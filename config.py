@@ -6,7 +6,14 @@ PASTA_PROJETO = os.path.dirname(os.path.abspath(__file__))
 PASTA_LOGS = os.path.join(PASTA_PROJETO, "logs")
 load_dotenv(os.path.join(PASTA_PROJETO, ".env"), override=True)
 
-OBRIGATORIAS = ["DB_HOST", "DB_PORT", "DB_USER", "DB_NAME"]
+OBRIGATORIAS = ["DB_HOST", "DB_PORT", "DB_USER", "DB_NAME", "SECRET_KEY"]
+
+# Chave que assina o cookie de sessão do login (nunca no código)
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+# Usuário de demonstração da gestão, criado pelo inicializar_banco.py
+ADMIN_USUARIO = os.getenv("ADMIN_USUARIO")
+ADMIN_SENHA = os.getenv("ADMIN_SENHA")
 
 MYSQL = {
     "host": os.getenv("DB_HOST"),

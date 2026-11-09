@@ -1,11 +1,11 @@
 # Zela Cidade - chamados de zeladoria urbana
-# MVC: modelos/ (dados e serviços), visao/ (tela), controles/ (rotas /api)
+# MVC: modelos/ (dados e serviços), visao/ (telas), controles/ (rotas /api)
 from flask import Flask
 
 import config
-from controles import chamados_controle
+from controles import chamados_controle, login_controle
 from controles.erros import registrar_erros
-from modelos import chamado_modelo, conexao
+from modelos import chamado_modelo, conexao, usuario_modelo
 from modelos.log_modelo import registrar
 
 app = Flask(__name__, static_folder="visao", static_url_path="")
@@ -13,7 +13,13 @@ app.json.ensure_ascii = False
 app.json.sort_keys = False
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024  # corpo acima de 16 KB -> 413
 
+# Sessão do login: cookie assinado, sem acesso pelo JavaScript e sem envio por outros sites
+app.secret_key = config.SECRET_KEY
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
 app.register_blueprint(chamados_controle.rotas)
+app.register_blueprint(login_controle.rotas)
 registrar_erros(app)
 
 
@@ -34,6 +40,7 @@ def preparar_banco():
         print(f"[ERRO] MySQL: {erro}")
         return False
     chamado_modelo.criar_tabela()
+    usuario_modelo.criar_tabela()
     return True
 
 

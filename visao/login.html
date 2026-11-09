@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zela Cidade | Login da gestão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <header class="topo">
+    <a href="index.html" class="topo__marca">
+      <div class="topo__anim" aria-hidden="true"><div id="anim-topo"></div></div>
+      <div>
+        <strong>Zela Cidade</strong>
+        <span>Chamados anônimos de zeladoria urbana</span>
+      </div>
+    </a>
+    <nav>
+      <a href="index.html">Abrir chamado</a>
+      <a href="acompanhar.html">Acompanhar</a>
+      <a href="gestao.html" class="ativo">Gestão</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="cartao login">
+      <div id="anim-tela" class="login__anim" data-animacao="login" aria-hidden="true"></div>
+      <h1>Acesso da prefeitura</h1>
+      <p class="suave">Área restrita a pessoas autorizadas.</p>
+      <form id="form-login" class="campos">
+        <label>Usuário
+          <input name="usuario" autocomplete="username" maxlength="50" required />
+        </label>
+        <label>Senha
+          <input name="senha" type="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit">Entrar</button>
+        <p id="msg-login" class="mensagem"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"
+          integrity="sha512-jEnuDt6jfecCjthQAJ+ed0MTVA++5ZKmlUcmDGBv2vUI/REn6FuIdixLNnQT+vKusE2hhTk2is3cFvv5wA+Sgg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="comum.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

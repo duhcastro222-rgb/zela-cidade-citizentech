@@ -80,4 +80,22 @@ corpo.addEventListener("click", async (ev) => {
 });
 
 filtro.addEventListener("change", carregar);
-carregar();
+
+// Sair: encerra a sessão no servidor
+document.getElementById("btn-sair").addEventListener("click", async () => {
+  await api("/api/logout", "POST");
+  location.href = "login.html";
+});
+
+// Só carrega a gestão se houver sessão; senão vai para o login
+async function iniciar() {
+  try {
+    const sessao = await api("/api/sessao");
+    document.getElementById("usuario-logado").textContent = "Logado como " + sessao.usuario;
+    carregar();
+  } catch {
+    location.href = "login.html";
+  }
+}
+
+iniciar();

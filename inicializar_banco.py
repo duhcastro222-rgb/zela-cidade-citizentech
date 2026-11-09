@@ -2,7 +2,7 @@
 import mysql.connector
 
 import config
-from modelos import chamado_modelo
+from modelos import chamado_modelo, usuario_modelo
 from modelos.conexao import consultar, executar
 
 # Dados fictícios com CEPs públicos
@@ -38,7 +38,16 @@ conexao.cursor().execute(f"CREATE DATABASE IF NOT EXISTS {nome_banco}")
 conexao.close()
 
 chamado_modelo.criar_tabela()
-print(f"[OK] Banco '{nome_banco}' e tabela 'chamados' prontos.")
+usuario_modelo.criar_tabela()
+print(f"[OK] Banco '{nome_banco}' e tabelas 'chamados' e 'usuarios' prontos.")
+
+# Usuário da gestão vindo do .env (senha gravada só como hash)
+if config.ADMIN_USUARIO and config.ADMIN_SENHA:
+    if consultar("SELECT id FROM usuarios WHERE usuario = %s", (config.ADMIN_USUARIO,)):
+        print(f"[INFO] Usuário '{config.ADMIN_USUARIO}' já existe.")
+    else:
+        usuario_modelo.criar(config.ADMIN_USUARIO, config.ADMIN_SENHA)
+        print(f"[OK] Usuário '{config.ADMIN_USUARIO}' criado para a gestão.")
 
 if consultar("SELECT COUNT(*) AS total FROM chamados")[0]["total"] == 0:
     for exemplo in EXEMPLOS:

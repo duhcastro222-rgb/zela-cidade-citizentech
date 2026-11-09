@@ -1,58 +1,48 @@
 # Rotas REST de chamados: GET, POST, PUT e DELETE
-import time
-
+# Públicas: abrir chamado, consultar protocolo e CEP | Gestão (login): o resto
 from flask import Blueprint, jsonify, request
 
 import config
-from controles import corpo_json
+from controles import corpo_json, exigir_login, limite_excedido
 from modelos import cep_modelo, central_socket, chamado_modelo
 from modelos.erros import ErroApi
 from modelos.log_modelo import registrar
 
 rotas = Blueprint("chamados", __name__)
 
-envios_por_ip = {}  # {ip: [horários dos envios no último minuto]}
-
-
-def limite_excedido(ip):
-    # Anti-spam: barra o IP que passar de LIMITE_POR_MINUTO envios
-    agora = time.time()
-    recentes = [t for t in envios_por_ip.get(ip, []) if agora - t < 60]
-    envios_por_ip[ip] = recentes
-    if len(recentes) >= config.LIMITE_POR_MINUTO:
-        return True
-    recentes.append(agora)
-    return False
+envios_por_ip = {}  # anti-spam de chamados
 
 
 @rotas.get("/api/chamados")
 def listar():
-    # 200
+    # Gestão: 200 | 401
+    exigir_login()
     return jsonify(chamado_modelo.listar())
 
 
 @rotas.get("/api/chamados/<int:id_chamado>")
 def detalhar(id_chamado):
-    # 200 | 404
+    # Gestão: 200 | 401 | 404
+    exigir_login()
     return jsonify(chamado_modelo.buscar(id_chamado))
 
 
 @rotas.get("/api/chamados/protocolo/<protocolo>")
 def acompanhar(protocolo):
-    # Tela do cidadão: 200 | 400 formato | 404
+    # Público (cidadão): 200 | 400 formato | 404
     return jsonify(chamado_modelo.buscar_por_protocolo(protocolo))
 
 
 @rotas.get("/api/cep/<cep>")
 def consultar_cep(cep):
-    # Formulário mostra o endereço e centraliza o mapa: 200 | 400 | 404 | 503
+    # Público: 200 | 400 | 404 | 503
     return jsonify(cep_modelo.buscar_endereco(cep))
 
 
 @rotas.post("/api/chamados")
 def criar():
-    # 201 | 400 inválido | 404 CEP inexistente | 429 spam | 503 ViaCEP fora
-    if limite_excedido(request.remote_addr):
+    # Público: 201 | 400 inválido | 404 CEP inexistente | 429 spam | 503 ViaCEP fora
+    if limite_excedido(envios_por_ip, request.remote_addr, config.LIMITE_POR_MINUTO):
         raise ErroApi("Muitos chamados em pouco tempo. Aguarde 1 minuto.", 429)
 
     dados = corpo_json()
@@ -74,18 +64,20 @@ def criar():
 
 @rotas.put("/api/chamados/<int:id_chamado>")
 def atualizar(id_chamado):
-    # 200 | 400 | 404
+    # Gestão: 200 | 400 | 401 | 404
+    usuario = exigir_login()
     dados = corpo_json()
     if not dados.get("status") and not dados.get("prioridade"):
         raise ErroApi("Informe status e/ou prioridade.")
     chamado = chamado_modelo.atualizar(id_chamado, dados)
-    registrar("ATUALIZAR CHAMADO", f"sucesso id={id_chamado} status={chamado['status']}")
+    registrar("ATUALIZAR CHAMADO", f"sucesso id={id_chamado} status={chamado['status']} por={usuario}")
     return jsonify(chamado)
 
 
 @rotas.delete("/api/chamados/<int:id_chamado>")
 def remover(id_chamado):
-    # 200 | 404
+    # Gestão: 200 | 401 | 404
+    usuario = exigir_login()
     chamado = chamado_modelo.remover(id_chamado)
-    registrar("REMOVER CHAMADO", f"sucesso id={id_chamado}")
+    registrar("REMOVER CHAMADO", f"sucesso id={id_chamado} por={usuario}")
     return jsonify({"removido": chamado})

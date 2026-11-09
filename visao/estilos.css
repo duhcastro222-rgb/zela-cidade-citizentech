@@ -9,10 +9,11 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: var(--fundo); color: var(--texto); }
+body { margin: 0; font-family: "Inter", "Segoe UI", Arial, sans-serif; background: var(--fundo); color: var(--texto); }
 main { max-width: 1150px; margin: 0 auto; padding: 20px 16px 40px; }
-h1 { margin: 0 0 16px; font-size: 1.4rem; }
-h2 { margin: 0; }
+h1, h2, .topo__marca strong { font-family: "Poppins", "Segoe UI", Arial, sans-serif; }
+h1 { margin: 0 0 16px; font-size: 1.5rem; }
+h2 { margin: 0; font-size: 1.15rem; }
 a { color: var(--verde); }
 .suave { color: var(--suave); font-size: .9rem; font-weight: normal; }
 
@@ -21,8 +22,18 @@ a { color: var(--verde); }
   background: var(--verde); color: #fff; padding: 14px 24px;
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
 }
-.topo__marca strong { display: block; font-size: 1.3rem; }
-.topo__marca span { opacity: .85; font-size: .9rem; }
+.topo__marca { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; }
+.topo__marca strong { display: block; font-size: 1.45rem; letter-spacing: .3px; }
+.topo__marca span { opacity: .85; font-size: .88rem; }
+.topo__anim { width: 58px; height: 58px; background: #fff; border-radius: 12px; overflow: hidden; }
+#anim-topo { width: 100%; height: 100%; transform: scale(2.6); } /* a animação ocupa só o centro do quadro */
+
+/* Cartão de destaque: título à esquerda, animação à direita */
+.destaque { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.destaque h1 { margin-bottom: 6px; }
+.destaque .suave { margin: 0 0 12px; }
+.destaque__anim { width: 230px; height: 160px; flex-shrink: 0; }
+.login__anim { height: 170px; margin-bottom: 4px; }
 nav { display: flex; gap: 6px; flex-wrap: wrap; }
 nav a { color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 6px; }
 nav a:hover { background: rgba(255, 255, 255, .15); }
@@ -102,6 +113,13 @@ th { color: var(--suave); font-weight: 600; }
 td.vazio { text-align: center; color: var(--suave); }
 td:first-child { white-space: nowrap; }
 
+.sessao { display: flex; align-items: center; gap: 10px; }
+.titulo-linha + .titulo-linha { margin-top: 12px; }
+
+/* Login */
+.login { max-width: 420px; margin: 40px auto; }
+.login button { align-self: stretch; }
+
 /* Etiquetas e mensagens */
 .etiqueta { padding: 3px 10px; border-radius: 999px; font-size: .8rem; font-weight: 600; white-space: nowrap; }
 .etiqueta.baixa { background: #e3f2ea; color: var(--verde-escuro); }
@@ -116,4 +134,5 @@ td:first-child { white-space: nowrap; }
   .grade-form, .detalhes { grid-template-columns: 1fr; }
   .contadores { grid-template-columns: repeat(2, 1fr); }
   .protocolo strong { font-size: 1.5rem; }
+  .destaque__anim { display: none; }
 }

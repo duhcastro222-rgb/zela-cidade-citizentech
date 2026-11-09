@@ -52,6 +52,21 @@ function criarMapa(idElemento) {
   return mapa;
 }
 
+// Animações Lottie (arquivos em visao/animacoes, baixados do LottieFiles)
+// Quem pediu menos movimento no sistema vê só o primeiro quadro
+function animar(elemento, nome) {
+  if (!elemento || !window.lottie) return;
+  const parado = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  lottie.loadAnimation({
+    container: elemento, renderer: "svg", loop: !parado, autoplay: !parado,
+    path: `animacoes/${nome}.json`
+  });
+}
+
+animar(document.getElementById("anim-topo"), "topo");
+const animTela = document.getElementById("anim-tela");
+if (animTela) animar(animTela, animTela.dataset.animacao);
+
 // Converte endereço em coordenadas (Nominatim / OpenStreetMap)
 async function localizarEndereco(endereco) {
   const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +

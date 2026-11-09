@@ -6,14 +6,20 @@
   <title>Zela Cidade | Abrir chamado</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
   <header class="topo">
-    <div class="topo__marca">
-      <strong>Zela Cidade</strong>
-      <span>Chamados anônimos de zeladoria urbana</span>
-    </div>
+    <a href="index.html" class="topo__marca">
+      <div class="topo__anim" aria-hidden="true"><div id="anim-topo"></div></div>
+      <div>
+        <strong>Zela Cidade</strong>
+        <span>Chamados anônimos de zeladoria urbana</span>
+      </div>
+    </a>
     <nav>
       <a href="index.html" class="ativo">Abrir chamado</a>
       <a href="acompanhar.html">Acompanhar</a>
@@ -33,8 +39,15 @@
       </div>
     </section>
 
+    <section class="cartao destaque">
+      <div>
+        <h1>Abrir chamado</h1>
+        <p class="suave">Viu um problema na rua? Marque no mapa e avise a prefeitura em menos de um minuto.</p>
+      </div>
+      <div id="anim-tela" class="destaque__anim" data-animacao="abrir" aria-hidden="true"></div>
+    </section>
+
     <section class="cartao">
-      <h1>Abrir chamado</h1>
       <form id="form-chamado" class="grade-form">
         <div class="campos">
           <label>Tipo
@@ -83,6 +96,9 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"
+          integrity="sha512-jEnuDt6jfecCjthQAJ+ed0MTVA++5ZKmlUcmDGBv2vUI/REn6FuIdixLNnQT+vKusE2hhTk2is3cFvv5wA+Sgg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="comum.js"></script>
   <script src="abrir.js"></script>
 </body>
